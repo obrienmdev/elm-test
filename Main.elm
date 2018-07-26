@@ -14,121 +14,57 @@ main =
         , subscriptions = subscriptions
         }
 
-
-
 -- MODEL
 
-
 type alias Model =
-    { content : String
-    , selected : String
+    {
+      message : String
+    , messages : List String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { content = "", selected = "none" }, Cmd.none )
-
-
+    (
+      { message = "", messages = [] }
+      , Cmd.none
+    )
 
 -- UPDATE
 
-
 type Msg
-    = Increment
-    | Edit String
-    | Fetch
-    | Receive (Result Http.Error String)
-    | Select String
-
+    = EditText String
+    | Add
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Edit newContent ->
-            ( { model | content = newContent }, Cmd.none )
+        EditText message ->
+          ( { model | message = message }, Cmd.none )
 
-        Increment ->
-            let
-                str =
-                    .content model
-                        |> String.reverse
-            in
-                ( { model | content = str }, Cmd.none )
-
-        Fetch ->
-            ( model, fetch ("/" ++ model.content) )
-
-        Receive (Ok data) ->
-            ( { model | content = data }, Cmd.none )
-
-        Receive (Err err) ->
-            ( { model | content = toString err }, Cmd.none )
-
-        Select data ->
-            ( { model | selected = data }, Cmd.none )
-
-
-fetch : String -> Cmd Msg
-fetch url =
-    let
-        request =
-            Http.getString url
-    in
-        Http.send Receive request
-
-
+        Add ->
+          ( { model | message = "", messages = (.message model) :: (.messages model) }, Cmd.none )
 
 -- VIEW
-
 
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ placeholder "enter text", onInput Edit ] []
+        [ input [ placeholder "enter text", onInput EditText ] []
         , Html.br [] []
-        , button [ onClick Increment ] [ text "button" ]
-        , button [ onClick Fetch ] [ text "fetch!" ]
-        , display model
-        , options
+        , button [ onClick Add ] [ text "add" ]
+        , todos (.messages model)
         ]
 
+todos : List String -> Html Msg
+todos messages =
+   fieldset [] (List.map todo messages)
 
-col model =
-    if String.length (.content model) > 5 then
-        "red"
-    else
-        "green"
-
-
-display : Model -> Html Msg
-display model =
-    let
-        colour =
-            col model
-    in
-        div []
-            [ div [ style [ ( "color", colour ) ] ] [ text (.content model) ]
-            , div [ style [ ( "color", "blue" ) ] ] [ text (.selected model) ]
-            ]
-
-
-options : Html Msg
-options =
-    fieldset [] (List.map option ["a","b"])
-
-option : String -> Html Msg
-option str =
-    label []
-        [ input [ type_ "radio", onClick (Select ("you picked " ++ str)) ] []
-        , text str
-        , Html.br [] []
-        ]
-
-
+todo : String -> Html Msg
+todo message =
+  div [] [text message, Html.br [] []]
 
 -- SUBS
-
 
 subscriptions model =
     Sub.none
