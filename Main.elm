@@ -56,7 +56,10 @@ update msg model =
                 ms =
                     .messages model
             in
-                ( { model | message = "", messages = m :: ms }, Cmd.none )
+                if (String.length m > 0) then
+                    ( { model | message = "", messages = m :: ms }, Cmd.none )
+                else
+                    ( model, Cmd.none )
 
         Delete index ->
             let
@@ -117,7 +120,7 @@ todo : Int -> String -> Html Msg
 todo i message =
     div []
         [ text message
-        , button [ onClick (Delete i), style[("float","right")] ] [ text ("delete" ++ (toString i)) ]
+        , button [ onClick (Delete i), style [ ( "float", "right" ) ] ] [ text ("delete" ++ (toString i)) ]
         , Html.br [] []
         ]
 
