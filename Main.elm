@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (Html, button, div, fieldset, input, label, text)
-import Html.Attributes exposing (placeholder, style, type_)
+import Html.Attributes exposing (placeholder, style, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Http
 
@@ -14,58 +14,94 @@ main =
         , subscriptions = subscriptions
         }
 
+
+
 -- MODEL
 
+
 type alias Model =
-    {
-      message : String
+    { message : String
     , messages : List String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    (
-      { message = "", messages = [] }
-      , Cmd.none
+    ( { message = "", messages = [] }
+    , Cmd.none
     )
 
+
+
 -- UPDATE
+
 
 type Msg
     = EditText String
     | Add
 
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         EditText message ->
-          ( { model | message = message }, Cmd.none )
+            ( { model | message = message }, Cmd.none )
 
         Add ->
-          ( { model | message = "", messages = (.message model) :: (.messages model) }, Cmd.none )
+            ( { model | message = "", messages = (.message model) :: (.messages model) }, Cmd.none )
+
+
 
 -- VIEW
+
 
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ placeholder "enter text", onInput EditText ] []
-        , Html.br [] []
-        , button [ onClick Add ] [ text "add" ]
+        [ textInput model
+        , addTodo
         , todos (.messages model)
         ]
 
+
+textInput : Model -> Html Msg
+textInput model =
+    input [ placeholder "enter text", onInput EditText, style (List.append inputStyle [ ( "width", "500px" ) ]), value model.message ] []
+
+
+addTodo : Html Msg
+addTodo =
+    button
+        [ onClick Add
+        , style (inputStyle)
+        ]
+        [ text "add" ]
+
+
+inputStyle : List ( String, String )
+inputStyle =
+    [ ( "margin", "10px" )
+    , ( "width", "100px" )
+    , ( "height", "40px" )
+    ]
+
+
 todos : List String -> Html Msg
 todos messages =
-   fieldset [] (List.map todo messages)
+    fieldset
+        [ style [ ( "margin", "20px" ) ]
+        ]
+        (List.map todo messages)
+
 
 todo : String -> Html Msg
 todo message =
-  div [] [text message, Html.br [] []]
+    div [] [ text message, Html.br [] [] ]
+
+
 
 -- SUBS
 
+
 subscriptions model =
     Sub.none
-
