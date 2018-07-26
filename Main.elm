@@ -39,6 +39,7 @@ init =
 type Msg
     = EditText String
     | Add
+    | Delete Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -48,7 +49,25 @@ update msg model =
             ( { model | message = message }, Cmd.none )
 
         Add ->
-            ( { model | message = "", messages = (.message model) :: (.messages model) }, Cmd.none )
+            let
+                m =
+                    .message model
+
+                ms =
+                    .messages model
+            in
+                ( { model | message = "", messages = m :: ms }, Cmd.none )
+
+        Delete index ->
+            let
+                ms =
+                    .messages model
+            in
+                ( { model | messages = deleteAtIndex index ms }, Cmd.none )
+
+
+deleteAtIndex i xs =
+    (List.take i xs) ++ (List.drop (i + 1) xs)
 
 
 
@@ -91,12 +110,16 @@ todos messages =
     fieldset
         [ style [ ( "margin", "20px" ) ]
         ]
-        (List.map todo messages)
+        (List.indexedMap todo messages)
 
 
-todo : String -> Html Msg
-todo message =
-    div [] [ text message, Html.br [] [] ]
+todo : Int -> String -> Html Msg
+todo i message =
+    div []
+        [ text message
+        , button [ onClick (Delete i), style[("float","right")] ] [ text ("delete" ++ (toString i)) ]
+        , Html.br [] []
+        ]
 
 
 
