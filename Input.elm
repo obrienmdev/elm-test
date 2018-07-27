@@ -36,5 +36,6 @@ inputStyle : List ( String, String )
 inputStyle =
     [ ( "margin", "10px" )
     , ( "width", "100px" )
-    , ( "height", "40px" )
+    , ( "height", "50px" )
+    , ( "font-size", "36px" )
     ]

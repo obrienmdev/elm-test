@@ -14,22 +14,29 @@ todos model =
         m =
             .messages model
     in
-        fieldset
-            [ style [ ( "margin", "20px" ) ]
+        div
+            [ style [ ( "margin", "20px" ), ( "font-size", "36px" ) ]
             ]
             (List.indexedMap (todo model) m)
 
 
 todo : Model -> Int -> Todo -> Html Msg
 todo model i todo =
-    div []
-        [ todoText model todo i
-        , todoButtons model todo i
-        , Html.br
-            [ style [ ( "clear", "right" ) ]
+    let
+        s =
+            if (.selected todo) then
+                [ ( "background", "#eeeeff" ) ]
+            else
+                []
+    in
+        div [ style s ]
+            [ todoText model todo i
+            , todoButtons model todo i
+            , Html.br
+                [ style [ ( "clear", "right" ) ]
+                ]
+                []
             ]
-            []
-        ]
 
 
 todoText : Model -> Todo -> Int -> Html Msg
@@ -38,6 +45,7 @@ todoText model todo i =
         input
             [ onInput EditTempText
             , value (.tempMessage model)
+            , style globalStyle
             ]
             []
     else
@@ -50,10 +58,12 @@ todoButtons model todo i =
         div [ style (todoStyle todo) ]
             [ button
                 [ onClick (ModifyEnd i (.tempMessage model))
+                , style globalStyle
                 ]
                 [ text "update" ]
             , button
                 [ onClick (ModifyCancel i)
+                , style globalStyle
                 ]
                 [ text "cancel" ]
             ]
@@ -61,11 +71,13 @@ todoButtons model todo i =
         div [ style (todoStyle todo) ]
             [ button
                 [ onClick (ModifyBegin i)
+                , style globalStyle
                 ]
                 [ text "edit" ]
             , button
                 [ onClick
                     (Delete i)
+                , style globalStyle
                 ]
                 [ text "delete" ]
             ]
@@ -76,3 +88,7 @@ todoStyle todo =
     [ ( "float", "right" )
     , ( "display", "inline-block" )
     ]
+
+
+globalStyle =
+    [ ( "font-size", "36px" ) ]
