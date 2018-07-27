@@ -6,6 +6,7 @@ import Html.Events exposing (onClick, onInput)
 import Model exposing (Model)
 import Msg exposing (..)
 import Todo exposing (Todo)
+import Style
 
 
 todos : Model -> Html Msg
@@ -45,7 +46,7 @@ todoText model todo i =
         input
             [ onInput EditTempText
             , value (.tempMessage model)
-            , style globalStyle
+            , style Style.globalStyle
             ]
             []
     else
@@ -54,41 +55,36 @@ todoText model todo i =
 
 todoButtons : Model -> Todo -> Int -> Html Msg
 todoButtons model todo i =
-    if (.selected todo) then
-        div [ style (todoStyle todo) ]
-            [ button
-                [ onClick (ModifyEnd i (.tempMessage model))
-                , style globalStyle
-                ]
-                [ text "update" ]
-            , button
-                [ onClick (ModifyCancel i)
-                , style globalStyle
-                ]
-                [ text "cancel" ]
+    let
+        buttonStyle =
+            [ ( "float", "right" )
+            , ( "display", "inline-block" )
             ]
-    else
-        div [ style (todoStyle todo) ]
-            [ button
-                [ onClick (ModifyBegin i)
-                , style globalStyle
+    in
+        if (.selected todo) then
+            div [ style buttonStyle ]
+                [ button
+                    [ onClick (ModifyEnd i (.tempMessage model))
+                    , style Style.globalStyle
+                    ]
+                    [ text "update" ]
+                , button
+                    [ onClick (ModifyCancel i)
+                    , style Style.globalStyle
+                    ]
+                    [ text "cancel" ]
                 ]
-                [ text "edit" ]
-            , button
-                [ onClick
-                    (Delete i)
-                , style globalStyle
+        else
+            div [ style buttonStyle ]
+                [ button
+                    [ onClick (ModifyBegin i)
+                    , style Style.globalStyle
+                    ]
+                    [ text "edit" ]
+                , button
+                    [ onClick
+                        (Delete i)
+                    , style Style.globalStyle
+                    ]
+                    [ text "delete" ]
                 ]
-                [ text "delete" ]
-            ]
-
-
-todoStyle : Todo -> List ( String, String )
-todoStyle todo =
-    [ ( "float", "right" )
-    , ( "display", "inline-block" )
-    ]
-
-
-globalStyle =
-    [ ( "font-size", "36px" ) ]

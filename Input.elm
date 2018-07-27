@@ -5,6 +5,7 @@ import Html.Attributes exposing (placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 import Model exposing (Model)
 import Msg exposing (..)
+import Style
 
 
 textInput : Model -> Html Msg
@@ -37,5 +38,5 @@ inputStyle =
     [ ( "margin", "10px" )
     , ( "width", "100px" )
     , ( "height", "50px" )
-    , ( "font-size", "36px" )
     ]
+        ++ Style.globalStyle
