@@ -24,7 +24,8 @@ import qualified System.IO                      as IO
 
 main :: IO ()
 main = do
-  IO.hSetBuffering IO.stdout $ IO.LineBuffering
+  IO.hSetBuffering IO.stdout IO.LineBuffering
+  IO.hSetEncoding IO.stdout IO.utf8
   putStrLn "start"
 
   state <- Concurrent.newMVar []
