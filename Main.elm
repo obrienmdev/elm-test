@@ -11,6 +11,7 @@ import Msg exposing (..)
 import Todos exposing (todos, todo)
 import Input exposing (textInput, addTodo)
 import Modify
+import WebSocket
 
 
 main =
@@ -50,6 +51,12 @@ update msg model =
         ModifyCancel index ->
             ( Modify.cancel model index, Cmd.none )
 
+        WS message ->
+            ( add { model | message = message }, Cmd.none )
+
+        Send ->
+            ( model, WebSocket.send wsUrl (.message model) )
+
 
 
 -- VIEW
@@ -69,4 +76,10 @@ view model =
 
 
 subscriptions model =
-    Sub.none
+    WebSocket.listen wsUrl WS
+
+
+wsUrl : String
+wsUrl =
+    --"ws://echo.websocket.org"
+    "ws://localhost:3000"

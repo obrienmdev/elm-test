@@ -15,19 +15,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { message = ""
       , messages =
-            [ { message = "Buy groceries"
-              , selected = False
-              }
-            , { message = "Feed cat"
-              , selected = False
-              }
-            , { message = "Take out the bins"
-              , selected = False
-              }
-            , { message = "Wash the dishes"
-              , selected = False
-              }
-            ]
+            []
       , tempMessage = ""
       }
     , Cmd.none

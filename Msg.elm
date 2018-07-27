@@ -9,3 +9,5 @@ type Msg
     | ModifyEnd Int String
     | ModifyCancel Int
     | Delete Int
+    | WS String
+    | Send

@@ -11,4 +11,15 @@ executable          server
     ghc-options:    -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
     extensions:     OverloadedStrings
     build-depends:  base   >= 4      && < 5
-                  , scotty
+                     , text
+                     , wai
+                     , wai-websockets
+                     , warp
+                     , websockets
+                     , http-types
+                     , safe
+                     , timers
+                     , suspend
+                     , HTTP
+                     , regex-compat
+
