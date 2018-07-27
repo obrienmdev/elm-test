@@ -21,8 +21,14 @@ todo i message =
         , button
             [ onClick
                 (Delete i)
-            , style [ ( "float", "right" ) ]
+            , style
+                [ ( "float", "right" )
+                , ( "display", "inline-block" )
+                ]
             ]
-            [ text ("delete" ++ (toString i)) ]
-        , Html.br [] []
+            [ text "delete" ]
+        , Html.br
+            [ style [ ( "clear", "right" ) ]
+            ]
+            []
         ]
